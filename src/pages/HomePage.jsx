@@ -13,6 +13,12 @@ export default function HomePage({ dashboard = {}, hourly = [] }) {
   const avgProd = d["평균 생산성"] || d["현재까지 평균 생산성"] || "0";
   const risk = d["생산성 위험등급"] || "-";
 
+  const requiredProd = d["정시 마감 필요 생산성"] || "0";
+  const lackProd = d["현재 대비 부족 생산성"] || "0";
+  const lackQty = d["정시 마감 부족 수량"] || "0";
+  const expectedFinish = d["예상 마감 시간"] || "-";
+  const remainHours = d["남은 작업 가능 시간"] || "0";
+
   const noticeText = `[YK엔젤스 출고 생산성 현황]
 
 운영일 : ${d["운영일"] || "-"}
@@ -24,11 +30,13 @@ export default function HomePage({ dashboard = {}, hourly = [] }) {
 현재 출고 인원 : ${d["현재 출고 인원"] || "0"}명
 현재 생산성 : ${displayProd(currentProd)}
 현재까지 평균 생산성 : ${displayProd(avgProd)}
-생산성 위험등급 : ${risk}
-목표 생산성 : ${d["목표 생산성"] || "25"}
-목표 달성률 : ${d["목표 달성률"] || "-"}
-목표 부족 : ${d["목표 부족"] || "0"}건
-다음 출고완료 타겟 : ${d["다음 출고완료 타겟"] || "-"} / ${d["다음 타겟까지"] || "0"}건 남음`;
+운영 상태 : ${risk}
+
+정시 마감 필요 생산성 : ${displayProd(requiredProd)}
+현재 대비 부족 생산성 : ${displayProd(lackProd)}
+정시 마감 부족 수량 : ${lackQty}건
+예상 마감 시간 : ${expectedFinish}
+남은 작업 가능 시간 : ${remainHours}시간`;
 
   function copyNotice() {
     navigator.clipboard.writeText(noticeText).then(() => alert("복사 완료"));
@@ -40,7 +48,10 @@ export default function HomePage({ dashboard = {}, hourly = [] }) {
 
       <div className={`hero-status ${riskClass(risk)}`}>
         <div><span>현재 운영 상태</span><b>{risk}</b></div>
-        <p>현재 {displayProd(currentProd)} · 평균 {displayProd(avgProd)} / 목표 {d["목표 생산성"] || "25"} · 잔여 {d["잔여"] || "0"}건</p>
+        <p>
+          현재 {displayProd(currentProd)} · 평균 {displayProd(avgProd)} / 
+          정시 필요 {displayProd(requiredProd)} · 잔여 {d["잔여"] || "0"}건
+        </p>
       </div>
 
       <div className="filter-card">
@@ -61,18 +72,18 @@ export default function HomePage({ dashboard = {}, hourly = [] }) {
         <KpiCard icon="👥" title="현재 출고 인원" value={d["현재 출고 인원"] || "0"} />
         <KpiCard icon="⚡" title="현재 생산성" value={displayProd(currentProd)} color="green" />
         <KpiCard icon="📊" title="현재까지 평균 생산성" value={displayProd(avgProd)} color="blue" />
-        <KpiCard icon="🚦" title="생산성 위험등급" value={risk} color="red" />
+        <KpiCard icon="🚦" title="운영 상태" value={risk} color="red" />
       </div>
 
       <div className="kpi-grid">
-        <KpiCard icon="🎯" title="목표 생산성" value={d["목표 생산성"] || "25"} color="orange" />
-        <KpiCard icon="🏁" title="목표 달성률" value={d["목표 달성률"] || "-"} color="blue" />
-        <KpiCard icon="🔥" title="목표 부족" value={d["목표 부족"] || "0"} color="orange" />
-        <KpiCard icon="🎯" title="다음 완료 타겟" value={`${d["다음 출고완료 타겟"] || "-"} / +${d["다음 타겟까지"] || "0"}`} color="blue" small />
+        <KpiCard icon="🎯" title="정시 필요 생산성" value={displayProd(requiredProd)} color="orange" />
+        <KpiCard icon="⚠️" title="현재 대비 부족" value={displayProd(lackProd)} color="red" />
+        <KpiCard icon="🔥" title="정시 부족 수량" value={lackQty} color="orange" />
+        <KpiCard icon="🕒" title="예상 마감 시간" value={expectedFinish} color="blue" small />
       </div>
 
       <div className="kpi-grid">
-        <KpiCard icon="🕒" title="갱신시간" value={d["갱신시간"] || "-"} small />
+        <KpiCard icon="⏳" title="남은 작업 가능 시간" value={remainHours} color="blue" />
         <KpiCard icon="📊" title="작업중 평균 O/L" value={d["작업중 평균 O/L"] || "0.0"} color="blue" />
         <KpiCard icon="📊" title="완료 평균 O/L" value={d["완료 평균 O/L"] || "0.0"} color="orange" />
         <KpiCard icon="📦" title="작업중 평균 PCS" value={d["작업중 평균 PCS"] || "0.0"} color="blue" />
@@ -80,6 +91,7 @@ export default function HomePage({ dashboard = {}, hourly = [] }) {
 
       <div className="kpi-grid single-last">
         <KpiCard icon="📦" title="완료 평균 PCS" value={d["완료 평균 PCS"] || "0.0"} color="orange" />
+        <KpiCard icon="🕒" title="갱신시간" value={d["갱신시간"] || "-"} small />
       </div>
 
       <HourlyTable rows={hourly} />
