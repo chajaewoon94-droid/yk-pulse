@@ -17,6 +17,7 @@ const overtimeOptions = [
   { value: "02:00", label: "2시간" },
   { value: "02:30", label: "2시간 30분" },
   { value: "03:00", label: "3시간" },
+  { value: "03:30", label: "3시간 30분" },
 ];
 
 function todayWorkDate() {
@@ -41,8 +42,8 @@ function normalizeSettings(s) {
       targetProductivity: b.targetProductivity || 25,
       dayPeople: Number(b.dayPeople || 0),
       nightPeople: Number(b.nightPeople || 0),
-      dayStart: b.dayStart || "09:30",
-      dayEnd: b.dayEnd || "18:30",
+      dayStart: b.dayStart || "09:00",
+      dayEnd: b.dayEnd || "18:00",
       nightStart: b.nightStart || "17:00",
       nightEnd: b.nightEnd || "02:00",
       dayOvertime: b.dayOvertime || "00:00",
