@@ -288,25 +288,35 @@ export default function SettingsModal({
   }
 }
 
-  function saveSystem() {
-    saveApiUrl(apiUrl);
-    saveViewMode(mode);
-    setMessage?.({
-      title: "시스템 설정 저장 완료",
-      text: "Apps Script API 주소와 화면 모드가 저장되었습니다.",
-    });
-  }
+function saveSystem() {
+  saveApiUrl(apiUrl);
+  saveViewMode(mode);
 
-  function resetSystem() {
-    resetApiUrl();
-    saveViewMode("auto");
-    setApiUrl(DEFAULT_API_URL);
-    setMode("auto");
-    setMessage?.({
-      title: "초기화 완료",
-      text: "API URL과 화면 모드가 기본값으로 초기화되었습니다.",
-    });
-  }
+  setMessage?.({
+    title: "시스템 설정 저장 완료",
+    text: "설정이 저장되었습니다. 앱을 다시 불러옵니다.",
+  });
+
+  setTimeout(() => {
+    window.location.reload();
+  }, 500);
+}
+
+function resetSystem() {
+  resetApiUrl();
+  saveViewMode("auto");
+  setApiUrl(DEFAULT_API_URL);
+  setMode("auto");
+
+  setMessage?.({
+    title: "초기화 완료",
+    text: "API URL과 화면 모드가 기본값으로 초기화되었습니다. 앱을 다시 불러옵니다.",
+  });
+
+  setTimeout(() => {
+    window.location.reload();
+  }, 500);
+}
 
   function addBreak() {
     const workDate = settings.base.workDate || "";
